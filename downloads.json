@@ -28,9 +28,36 @@
   ],
   "mirrors": [
     {
-      "name": "官网直链下载（推荐）",
+      "name": "官网高速下载（推荐）",
+      "chunks": [
+        "download/v1.9.110/vchain.part001",
+        "download/v1.9.110/vchain.part002",
+        "download/v1.9.110/vchain.part003",
+        "download/v1.9.110/vchain.part004",
+        "download/v1.9.110/vchain.part005",
+        "download/v1.9.110/vchain.part006",
+        "download/v1.9.110/vchain.part007",
+        "download/v1.9.110/vchain.part008",
+        "download/v1.9.110/vchain.part009",
+        "download/v1.9.110/vchain.part010",
+        "download/v1.9.110/vchain.part011",
+        "download/v1.9.110/vchain.part012",
+        "download/v1.9.110/vchain.part013",
+        "download/v1.9.110/vchain.part014",
+        "download/v1.9.110/vchain.part015",
+        "download/v1.9.110/vchain.part016",
+        "download/v1.9.110/vchain.part017",
+        "download/v1.9.110/vchain.part018",
+        "download/v1.9.110/vchain.part019",
+        "download/v1.9.110/vchain.part020"
+      ],
+      "filename": "V链_v1.9.110.exe",
+      "note": "由官网自动分段加载并在浏览器中合并，不跳转 GitHub。下载期间请保持页面打开。若浏览器提示「这种文件可能会损害你的电脑」，选「保留」即可；Windows 首次运行会提示「未知发布者」，选「更多信息 → 仍要运行」。"
+    },
+    {
+      "name": "GitHub 备用下载",
       "url": "https://github.com/VIN0486/V-Chain-Site/releases/download/v1.9.110/vchain.exe",
-      "note": "点一下直接下载，不用网盘、不用登录。若浏览器提示「这种文件可能会损害你的电脑」，选「保留」即可；Windows 首次运行会提示「未知发布者」，选「更多信息 → 仍要运行」。"
+      "note": "官网分包下载不可用时尝试。部分网络访问 GitHub 可能较慢或无法连接。"
     }
   ],
   "tip": "软件未购买代码签名证书，Windows 可能提示“未知发布者”，选择“更多信息 → 仍要运行”即可；若被杀软误报，选择“允许/信任”。下载后可对照本页下方的 SHA256 值核对文件是否被二次打包。",

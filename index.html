@@ -131,9 +131,9 @@ footer a{margin:0 8px}
   </div>
   <div class="tip" style="margin-bottom:14px">
     <b>打开后界面变成白底、文字挤成一列、没有平台卡片？</b><br>
-    这是电脑缺少微软 WebView2 运行组件，不是电脑配置低。v1.9.107 会在启动时自动检查并引导安装；也可以先手动下载：
+    这是电脑缺少微软 WebView2 运行组件，不是电脑配置低。v1.9.110 会在启动时自动检查并引导安装；也可以先手动下载：
     <a class="btn ghost" href="download/webview2-setup.exe" style="margin-left:8px;padding:7px 16px">下载 WebView2 修复组件</a><br>
-    <span class="muted">安装完成后，再重新打开 V链 v1.9.107。安装程序带有 Microsoft Corporation 数字签名。</span>
+    <span class="muted">安装完成后，再重新打开 V链 v1.9.110。安装程序带有 Microsoft Corporation 数字签名。</span>
   </div>
   <div class="sha" id="sha"></div>
   <div class="tip" id="dltip"></div>
@@ -191,7 +191,7 @@ footer a{margin:0 8px}
   </details>
   <details>
     <summary>软件界面变成白底、文字挤成一列，平台卡片不见了？</summary>
-    <p>这是电脑缺少或损坏了微软 <b>WebView2</b> 运行组件，软件因此退回了老旧的 IE 内核，和电脑性能、显卡无关。v1.9.107 启动时若检测到该问题，会直接弹出中文提示并启动内置的微软官方修复安装；也可以手动下载<a href="download/webview2-setup.exe">WebView2 修复组件</a>。安装完成后重新打开 V链即可恢复正常界面。</p>
+    <p>这是电脑缺少或损坏了微软 <b>WebView2</b> 运行组件，软件因此退回了老旧的 IE 内核，和电脑性能、显卡无关。v1.9.110 启动时若检测到该问题，会直接弹出中文提示并启动内置的微软官方修复安装；也可以手动下载<a href="download/webview2-setup.exe">WebView2 修复组件</a>。安装完成后重新打开 V链即可恢复正常界面。</p>
   </details>
   <details>
     <summary>提示“Windows 已保护你的电脑” / 杀软报毒？</summary>
@@ -275,15 +275,50 @@ async function j(url){
   try{
     const d = await j("downloads.json");
     const box = document.getElementById("mirrors");
-    const list = (d.mirrors||[]).filter(m=>m.url);
+    const list = (d.mirrors||[]).filter(m=>m.url || (m.chunks||[]).length);
     if(!list.length){
       box.innerHTML = '<div class="dl-card"><b>下载链接配置中</b>' +
         '<div class="note">官网已上线，网盘链接稍后补充，请稍后刷新本页。</div></div>';
     }else{
-      box.innerHTML = list.map(m =>
+      box.innerHTML = list.map((m,i) =>
         '<div class="dl-card"><b>' + m.name + '</b><div class="note">' + (m.note||"") +
-        '</div><a class="btn" href="' + m.url + '" target="_blank" rel="noopener">前往下载</a></div>'
+        '</div>' + ((m.chunks||[]).length
+          ? '<button class="btn" type="button" data-chunk-dl="' + i + '">前往下载</button>' +
+            '<div class="note" id="chunk-progress-' + i + '"></div>'
+          : '<a class="btn" href="' + m.url + '" target="_blank" rel="noopener">前往下载</a>') +
+        '</div>'
       ).join("");
+      document.querySelectorAll("[data-chunk-dl]").forEach(btn => {
+        btn.onclick = async () => {
+          const m = list[Number(btn.dataset.chunkDl)];
+          const tip = document.getElementById("chunk-progress-" + btn.dataset.chunkDl);
+          const parts = m.chunks || [];
+          const blobs = [];
+          btn.disabled = true;
+          try{
+            for(let i=0;i<parts.length;i++){
+              if(tip) tip.textContent = "正在下载 " + (i+1) + "/" + parts.length + "，请勿关闭页面…";
+              const r = await fetch(parts[i], {cache:"no-store"});
+              if(!r.ok) throw new Error("分包 " + (i+1) + " 下载失败（HTTP " + r.status + "）");
+              blobs.push(await r.blob());
+            }
+            if(tip) tip.textContent = "正在合并安装包…";
+            const blob = new Blob(blobs, {type:"application/octet-stream"});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = m.filename || "V链.exe";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(()=>URL.revokeObjectURL(a.href), 60000);
+            if(tip) tip.textContent = "下载已开始。若浏览器拦截，请再点一次并选择“允许下载”。";
+          }catch(e){
+            if(tip) tip.textContent = "官网分包下载失败：" + e.message + "；可尝试下方备用下载。";
+          }finally{
+            btn.disabled = false;
+          }
+        };
+      });
     }
     if(d.sha256){
       document.getElementById("sha").textContent = "SHA256 校验值：" + d.sha256;
