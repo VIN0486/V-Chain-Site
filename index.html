@@ -293,15 +293,22 @@ async function j(url){
           const m = list[Number(btn.dataset.chunkDl)];
           const tip = document.getElementById("chunk-progress-" + btn.dataset.chunkDl);
           const parts = m.chunks || [];
-          const blobs = [];
+          const blobs = new Array(parts.length);
           btn.disabled = true;
           try{
-            for(let i=0;i<parts.length;i++){
-              if(tip) tip.textContent = "正在下载 " + (i+1) + "/" + parts.length + "，请勿关闭页面…";
-              const r = await fetch(parts[i], {cache:"no-store"});
-              if(!r.ok) throw new Error("分包 " + (i+1) + " 下载失败（HTTP " + r.status + "）");
-              blobs.push(await r.blob());
+            let next = 0, done = 0;
+            async function worker(){
+              while(true){
+                const i = next++;
+                if(i >= parts.length) return;
+                const r = await fetch(parts[i], {cache:"no-store"});
+                if(!r.ok) throw new Error("分包 " + (i+1) + " 下载失败（HTTP " + r.status + "）");
+                blobs[i] = await r.blob();
+                done++;
+                if(tip) tip.textContent = "已下载 " + done + "/" + parts.length + " 段，请勿关闭页面…";
+              }
             }
+            await Promise.all(Array.from({length:Math.min(4, parts.length)}, worker));
             if(tip) tip.textContent = "正在合并安装包…";
             const blob = new Blob(blobs, {type:"application/octet-stream"});
             const a = document.createElement("a");
