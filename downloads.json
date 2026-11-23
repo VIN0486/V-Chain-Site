@@ -1,6 +1,6 @@
 {
-  "sha256": "cecd8f5bb845185e4371ebd4ed7c02b40041d94b17d734120a4720e95b6510d4",
-  "version": "1.9.116",
+  "sha256": "268a4354444171efdfc56211c6ac7a67b83355d8f6a7538ea1355f67e402f7a1",
+  "version": "1.9.122",
   "contact": "",
   "wechat": "",
   "plans": [
@@ -29,15 +29,15 @@
   "mirrors": [
     {
       "name": "国内高速下载（推荐）",
-      "url": "https://gh-proxy.com/https://github.com/VIN0486/V-Chain-Site/releases/download/v1.9.116/vchain.exe",
+      "url": "https://gh-proxy.com/https://github.com/VIN0486/V-Chain-Site/releases/download/v1.9.122/vchain.exe",
       "note": "国内可直接下载，无需 VPN、无需登录。若浏览器提示「这种文件可能会损害你的电脑」，选「保留」即可；Windows 首次运行会提示「未知发布者」，选「更多信息 → 仍要运行」。"
     },
     {
       "name": "GitHub 原站下载（备用）",
-      "url": "https://github.com/VIN0486/V-Chain-Site/releases/download/v1.9.116/vchain.exe",
+      "url": "https://github.com/VIN0486/V-Chain-Site/releases/download/v1.9.122/vchain.exe",
       "note": "备用地址，部分网络可能需要 GitHub 加速；国内用户优先使用上方高速下载。"
     }
   ],
   "tip": "软件未购买代码签名证书，Windows 可能提示“未知发布者”，选择“更多信息 → 仍要运行”即可；若被杀软误报，选择“允许/信任”。下载后可对照本页下方的 SHA256 值核对文件是否被二次打包。",
-  "size": 95192028
+  "size": 104862172
 }
